@@ -59,6 +59,20 @@
       </option>
       <% } %>
     </select>
+    <div>
+      <label>Set Rate Limiter</label><br>
+      <div>
+        <input type="number" id="rateLimiterNumber" name="rateLimiterNumber"
+        min="0" max="1000000">
+        <select id="rateLimiterUnit" name="rateLimiterUnit">
+          <option value="minutes">Per Minute</option>
+          <option value="hours">Per Hour</option>
+          <option value="days">Per Day</option>
+        </select>
+        <button id="setRateLimiter">Set Rate Limiter</button>
+      </div>
+      
+    </div>
   </div>
   <script>
     $.ajaxSetup({
@@ -96,6 +110,17 @@
               text: t
             }));
           });
+        });
+    });
+    $("#setRateLimiter").click(function () {
+      var rateLimiterNumber = $("#rateLimiterNumber").val();
+      var rateLimiterUnit = $("#rateLimiterUnit").val();
+      if (rateLimiterNumber === undefined || rateLimiterNumber === "") {
+        return;
+      }
+      $.post("set_ratelimit", { "data": {rateLimiterNumber, rateLimiterUnit} })
+        .done(function (data) {
+          alert(`Rate Limit set to ${rateLimiterNumber} ${rateLimiterUnit}`)
         });
     });
   </script>

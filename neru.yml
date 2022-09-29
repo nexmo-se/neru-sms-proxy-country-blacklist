@@ -1,0 +1,11 @@
+project:
+  name: neru-sms-proxy-country-blacklist
+instance:
+  name: dev
+  runtime: nodejs16
+  region: aws.euw1
+  application-id: 8c9e7183-6c11-4b24-bf3c-8eaad5710aa8
+  entrypoint: [node, index.js]
+debug:
+  name: test
+  entrypoint: [nodemon, --inspect, index.js]
