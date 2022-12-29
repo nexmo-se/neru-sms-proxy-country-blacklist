@@ -148,9 +148,9 @@ export function NumberModule(state, pool){
             console.log(result.rows[0])
             var count = result.rows[0]['count']
             if (count >= parseInt(limit)){
-              const insert_query = `insert into time_blocked (api_key, number_start, number_end, blocked_until) values ('${prefix}', '${number_start}', '${number_end}', now() + '${lock_time} seconds');`
+              const insert_query = `insert into time_blocked (api_key, number_start, number_end, blocked_until) select '${prefix}', '${number_start}', '${number_end}', now() + '${lock_time} seconds' WHERE NOT EXISTS (SELECT id FROM time_blocked WHERE api_key = '${prefix}' and number_start = '${number_start}' and number_end = '${number_end}' and created_at >  now() - interval '3 seconds');`
               const update_query =  `update octopuslog set used_in_block = true where id in (select id from octopuslog where data_from like '${calc}' and api_key = '${prefix}' and  created_at between now() - interval '${time} seconds' and now() and used_in_block = false)`
-              console.log()
+              console.log(insert_query)
               await pool.query(insert_query)
               pool.query(update_query)
               res.json({"allowed":false,"message":"number range in timed block"});
